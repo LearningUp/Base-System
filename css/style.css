@@ -1,0 +1,11 @@
+body{
+    min-height: 100vh;
+}
+
+.main-wrapper{
+    height:100%;
+}
+
+.main-wrapper > div{
+    width: 100%;
+}
