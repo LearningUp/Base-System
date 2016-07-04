@@ -1,0 +1,32 @@
+.errorWrapper {
+    border-radius: 4px;
+}
+
+.errorList {
+    margin-left: 50px;
+}
+
+.errorList > li {
+    list-style: disc;
+    color: white;
+}
+
+.errorTitle {
+    color: white;
+}
+
+.user-img {
+    width: 50%;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.user-name {
+    text-align: center;
+}
+
+.adminMain {
+    padding: 40px;
+    background-color: white;
+}
