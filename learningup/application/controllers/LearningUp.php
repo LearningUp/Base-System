@@ -82,7 +82,7 @@ class LearningUp extends CI_Controller {
         	//Caso os valores sejam validos, verifica se existe.
 			$this->load->model('user');
 			$res = $this->user->select($this->input->post('email'), md5($this->input->post('senha')));
-			if($res == null){
+			if($res === null){
 				$this->load->view('login', array('error' => "Usuário ou Senha inválidos"));
 			}else{
 				$this->load->model('mylog');
@@ -92,7 +92,14 @@ class LearningUp extends CI_Controller {
 			}
         }
 	}
-
+	public function formClass(){
+		$this->checkLoged();
+		$this->load->view('formClass');
+	}
+	public function createClass(){
+		$this->checkLoged();
+		$this->load->view('formClass');
+	}
 	public function main(){
 		$this->checkLoged();
         $this->load->view('main', $this->session->user);
