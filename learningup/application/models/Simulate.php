@@ -7,7 +7,8 @@
 				$this->db->where("id",$id);
 				$query = $this->db->get("lista_de_exercicio");
 				$data = $query->result_array();
+				return $data;
 		}
-		
+
 	}
 ?>
