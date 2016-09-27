@@ -5,7 +5,9 @@ class Admin extends CI_Controller {
 	public function index(){
 		$this->load->view("admin/admin");
 	}
-
+	public function formMateria(){
+		$this->load->view("admin/FormSubject");
+	}
 	public function logs(){
 		$this->load->library('pagination');
 		$this->load->model('mylog');
@@ -30,7 +32,7 @@ class Admin extends CI_Controller {
 		$config['reuse_query_string'] = TRUE;
 
 		$this->pagination->initialize($config);
-		
+
 		if($this->uri->segment(3) == "search"){
 			$page = ($this->uri->segment(4, 0)) ;
 			$logList = $this->mylog->get_filtered_list($config["per_page"], $page, $this->input->get('search_bar'));
@@ -97,12 +99,12 @@ class Admin extends CI_Controller {
 		$config['reuse_query_string'] = TRUE;
 
 		$this->pagination->initialize($config);
-		
+
 		if($this->uri->segment(3) == "search"){
 			$page = ($this->uri->segment(4, 0));
 			$userList = $this->user->get_filtered_list($config["per_page"], $page, $this->input->get('search_bar'));
 		}else{
-			$page = ($this->uri->segment(3, 0)) ;
+			$page = ($this->uri->segment(3, 0));
 			$userList = $this->user->get_list($config["per_page"], $page);
 		}
 		$config['total_rows'] = count ($userList);
@@ -111,9 +113,9 @@ class Admin extends CI_Controller {
 	}
 
 	public function updateUser(){
-		$this->form_validation->set_error_delimiters('<li>', '</li>'); 
+		$this->form_validation->set_error_delimiters('<li>', '</li>');
 		$this->load->model('user');
-		
+
 		//Executa a validação dos campos
 		$this->form_validation->set_rules('nome', 'nome', 'trim|required|min_length[4]|max_length[30]');
 		$this->form_validation->set_rules('sobrenome', 'sobrenome', 'trim|required|min_length[4]|max_length[45]');
@@ -146,11 +148,57 @@ class Admin extends CI_Controller {
 		if($this->uri->segment(3, -1) != -1){
 			$this->load->model('user');
 			$this->load->model('mylog');
-			
+
 			$this->mylog->delete_user($this->uri->segment(3));
 			$this->user->delete($this->uri->segment(3));
 		}
 		redirect('Admin/users');
+	}
+	public function createSubject(){
+		$this->load->library("form_validation");
+		$this->load->model("Subject");
+		$regras = array(
+			array(
+				'field' => 'nome',
+				'label' => 'Nome',
+				'rules' => 'required'
+			),
+			array(
+				'field' => 'descricao',
+				'label' => 'descricao',
+				'rules' => 'required'
+			),
+			array(
+				'field' => 'cor',
+				'label' => 'cor',
+				'rules' => 'required'
+			),
+			array(
+				'field' => 'img',
+				'label' => 'img',
+				'rules' => 'required'
+			),
+
+		);
+		$this->form_validation->set_rules($regras);
+		$config["upload_path"] = "./uploads/subjectImg/.";
+		$config["allowed_types"] = "png|jpeg|gif";
+		$config["max_size"] = 100;
+		$config ["max_weigth"] = 1024;
+		$config["max_height"] = 768;
+		$this->load->library('upload',$config);
+		if($this->form_validation->run() == false){
+			echo validation_errors();
+		}else{
+			$dados = $arrayName = array(
+				'nome' => $this->input->post('nome'),
+				'descricao' => $this->input->post('descricao'),
+				'cor' => $this->input->post('cor'),
+				'imagem' => $this->input->post('imagem')
+			);
+			$this->upload->do_upload($dados['imagem']);
+			$this->Subject->create($dados);
+		}
 	}
 }
 ?>
