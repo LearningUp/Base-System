@@ -13,6 +13,5 @@
         $data = $query->result_array();
         return $data;
     }
-
   }
 ?>
