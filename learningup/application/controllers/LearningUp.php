@@ -21,7 +21,7 @@ class LearningUp extends CI_Controller {
 
 	public function index($error = null){
 		$this->checkLoged();
-		redirect("LearningUp/main");
+		redirect("Aluno/index");
 	}
 	
 	public function cadastro(){
@@ -102,6 +102,7 @@ class LearningUp extends CI_Controller {
 	}
 	public function main(){
 		$this->checkLoged();
-        $this->load->view('main', $this->session->user);
+		redirect("Aluno/index");
+       // $this->load->view('main', $this->session->user);
 	}
 }

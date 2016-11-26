@@ -3,8 +3,89 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Aluno extends CI_Controller {
 	public function index(){
-		$this->load->view("Aluno/dashboard");
+		$this->load->view("Aluno/dashboard", array('option' => 'Home', 'userdate' => $this->session->user));
 	}
+
+	public function Aulas(){
+		$this->load->library('pagination');
+		$this->load->model('Materia');
+
+		$config['base_url'] = 'http://127.0.0.1/index.php/Aluno/Aulas';
+		$config['per_page'] = 20;
+
+		$config['full_tag_open'] = '<ul class="pagination">';
+		$config['full_tag_close'] = '</ul>';
+		$config['first_link'] = FALSE;
+		$config['last_link'] = FALSE;
+		$config['next_tag_open'] = '<li class="waves-effect">';
+		$config['next_link'] = '<i class="material-icons">chevron_right</i>';
+		$config['next_tag_close'] = '</li>';
+		$config['prev_tag_open'] = '<li class="waves-effect">';
+		$config['prev_link'] = '<i class="material-icons">chevron_left</i>';
+		$config['prev_tag_close'] = '</li>';
+		$config['cur_tag_open'] = '<li class="active">';
+		$config['cur_tag_close'] = '</li>';
+		$config['num_tag_open'] = '<li class="waves-effect">';
+		$config['num_tag_close'] = '</li>';
+		$config['reuse_query_string'] = TRUE;
+
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(3, 0)) ;
+		$materias = $this->Materia->get_list($config["per_page"], $page);
+
+		$this->load->view("Aluno/dashboard", array('option' => 'Aulas', 'userdate' => $this->session->user, 'materias' => $materias));
+	}
+
+	public function Materia(){
+		$this->load->library('pagination');
+		$this->load->model('Conteudo');
+
+		$config['base_url'] = 'http://127.0.0.1/index.php/Aluno/Materia';
+		$config['per_page'] = 20;
+
+		$config['full_tag_open'] = '<ul class="pagination">';
+		$config['full_tag_close'] = '</ul>';
+		$config['first_link'] = FALSE;
+		$config['last_link'] = FALSE;
+		$config['next_tag_open'] = '<li class="waves-effect">';
+		$config['next_link'] = '<i class="material-icons">chevron_right</i>';
+		$config['next_tag_close'] = '</li>';
+		$config['prev_tag_open'] = '<li class="waves-effect">';
+		$config['prev_link'] = '<i class="material-icons">chevron_left</i>';
+		$config['prev_tag_close'] = '</li>';
+		$config['cur_tag_open'] = '<li class="active">';
+		$config['cur_tag_close'] = '</li>';
+		$config['num_tag_open'] = '<li class="waves-effect">';
+		$config['num_tag_close'] = '</li>';
+		$config['reuse_query_string'] = TRUE;
+
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(3, 0)) ;
+		$conteudos = $this->Conteudo->get_list($config["per_page"], $page);
+
+		$this->load->view("Aluno/dashboard", array('option' => 'Aulas', 'userdate' => $this->session->user, 'materia' => $materia, 'conteudos' => $conteudos));
+	}
+
+	public function Simulados(){
+		$this->load->view("Aluno/dashboard", array('option' => 'Simulados', 'userdate' => $this->session->user));
+	}
+
+	public function Exercicios(){
+		$this->load->view("Aluno/dashboard", array('option' => 'Exercicios', 'userdate' => $this->session->user));
+	}
+
+	public function Grupos(){
+		$this->load->view("Aluno/dashboard", array('option' => 'Grupos', 'userdate' => $this->session->user));
+	}
+
+	public function Opcoes(){
+		$this->load->view("Aluno/dashboard", array('option' => 'Opcoes', 'userdate' => $this->session->user));
+	}
+
+
+
 	public function startSimulate(){
 		$this->load->view("Simulate/simulateAwser");
 	}
