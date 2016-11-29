@@ -6,7 +6,7 @@
   </head>
   <body>
     <?php
-      echo form_open("Admin/createSubject");
+      echo form_open_multipart("Admin/createSubject");
     ?>
     <label for="nome">Nome</label>
     <input type="text" name="nome"/><br/>
@@ -15,7 +15,7 @@
     <label for="cor">Cor:</label>
     <input type="text" name="cor"/><br/>
     <label for="img">Image:</label>
-    <input type="file" name="img"/><br/>
+    <input type="file" name="img" id="img"/><br/>
     <input type="submit"/>
     <?php
       echo form_close();

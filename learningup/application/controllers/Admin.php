@@ -6,6 +6,7 @@ class Admin extends CI_Controller {
 		$this->load->view("admin/admin");
 	}
 	public function formMateria(){
+		$this->load->helper(array('form','url'));
 		$this->load->view("admin/FormSubject");
 	}
 	public function logs(){
@@ -172,18 +173,13 @@ class Admin extends CI_Controller {
 				'field' => 'cor',
 				'label' => 'cor',
 				'rules' => 'required'
-			),
-			array(
-				'field' => 'img',
-				'label' => 'img',
-				'rules' => 'required'
-			),
+			)
 
 		);
 		$this->form_validation->set_rules($regras);
-		$config["upload_path"] = "./uploads/subjectImg/.";
+		$config["upload_path"] = "application/uploads/subjects";
 		$config["allowed_types"] = "png|jpeg|gif";
-		$config["max_size"] = 100;
+		$config["max_size"] = 1000000;
 		$config ["max_weigth"] = 1024;
 		$config["max_height"] = 768;
 		$this->load->library('upload',$config);
@@ -194,9 +190,16 @@ class Admin extends CI_Controller {
 				'nome' => $this->input->post('nome'),
 				'descricao' => $this->input->post('descricao'),
 				'cor' => $this->input->post('cor'),
-				'imagem' => $this->input->post('imagem')
+				'imagem' => $this->input->post('img')
 			);
-			$this->upload->do_upload($dados['imagem']);
+			(is_dir($config['upload_path'])) or die("directory not exists<br/>");
+			if(!$this->upload->do_upload('img')){
+				$this->upload->display_errors();
+			}else{
+				$file = array('file' => $this->upload->data());
+				var_dump($file);
+				$dados['imagem'] = $file['file']['file_name'];
+			}
 			$this->Subject->create($dados);
 		}
 	}
