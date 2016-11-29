@@ -49,6 +49,53 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </ul>
         <?php if(isset($option)): ?>
         <div class="container adminMain">
+            <!-- Exercicios & Simulados -->
+            <?php if($option == "Exercicios" || $option == "Simulados"): ?>
+            <div class="row">
+                <div class="col s12">
+                    <h1 class="center">Listas de <?php if ($option == "Exercicios"): ?>Exércicios<?php else: ?>Simulados<?php endif ?></h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <?php if(isset($listas_exercicios) && !is_null($listas_exercicios)):?>
+                    <table class="centered highlight responsive-table">
+                        <thead>
+                            <tr>
+                                <th data-field="id">ID</th>
+                                <th data-field="titulo">Título</th>
+                                <th data-field="realizado">Realizado <i class="material-icons">&#xE8F4;</i></th>
+                                <th data-field="gostei">Gostei <i class="material-icons">&#xE8DC;</i></th>
+                                <th data-field="n_gostei">Não gostei <i class="material-icons">&#xE8DB;</i></th>
+                                <th data-field="tempo_limite">Tempo Limite <i class="material-icons">&#xE425;</i></th>
+                                <th data-field="n_gostei">Acessar</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($listas_exercicios as $le):  ?>
+                            <tr>
+                                <td><?php echo $le['id']; ?></td>
+                                <td><?php echo $le['titulo']; ?></td>
+                                <td><?php echo (int)$le['realizado']; ?></td>
+                                <td><?php echo (int)$le['gostei']; ?></td>
+                                <td><?php echo (int)$le['n_gostei']; ?></td>
+                                <td><?php echo (int)$le['tempo_limite']; ?></td>
+                                <td><?php echo anchor("Aluno/".($option == "Exercicios" ? "RealizarListaExercicios/" : "ConfirmarSimulado/").$le['id'], "Acessar", array('class' => "btn waves-effect waves-blue")); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12 center">
+                    <?php echo $this->pagination->create_links(); ?>
+                </div>
+            </div>
+            <?php endif; ?>
+            <!-- END Exercicios & Simulados -->
             <!-- Aulas -->
             <?php if($option == "Aulas"): ?>
             <div class="row">
@@ -130,10 +177,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="card-action">
                                 <?php echo  anchor('Aluno/AssistindoAula/'.$aula['id'], 'Assistir!', array('class' => 'btn waves-effect waves-blue'));  ?>
                                 <span class="white-text"> 55 minutos</span>
-                                <span class="badge ">
-                                <span class="chip"><?php echo (int)$aula['gostei']; ?> <i class="material-icons">&#xE8DC;</i></span> 
-                                <span class="chip"><?php echo (int)$aula['n_gostei']; ?> <i class="material-icons">&#xE8DB;</i></span> 
-                                <span class="chip"><?php echo (int)$aula['realizado']; ?>  <i class="material-icons">&#xE8F4;</i></span> 
+                                    <span class="badge ">
+                                    <span class="chip"><?php echo (int)$aula['gostei']; ?> <i class="material-icons">&#xE8DC;</i></span> 
+                                    <span class="chip"><?php echo (int)$aula['n_gostei']; ?> <i class="material-icons">&#xE8DB;</i></span> 
+                                    <span class="chip"><?php echo (int)$aula['realizado']; ?>  <i class="material-icons">&#xE8F4;</i></span> 
                                 </span>
                             </div>
                         </div>

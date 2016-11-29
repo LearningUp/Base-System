@@ -6,6 +6,69 @@ class Aluno extends CI_Controller {
 		$this->load->view("Aluno/dashboard", array('option' => 'Home', 'userdate' => $this->session->user));
 	}
 
+	public function Simulados(){
+		$this->load->library('pagination');
+		$this->load->model('ListaExercicio');
+
+		$config['base_url'] = 'http://127.0.0.1/index.php/Aluno/Simulados';
+		$config['per_page'] = 20;
+
+		$config['full_tag_open'] = '<ul class="pagination">';
+		$config['full_tag_close'] = '</ul>';
+		$config['first_link'] = FALSE;
+		$config['last_link'] = FALSE;
+		$config['next_tag_open'] = '<li class="waves-effect">';
+		$config['next_link'] = '<i class="material-icons">chevron_right</i>';
+		$config['next_tag_close'] = '</li>';
+		$config['prev_tag_open'] = '<li class="waves-effect">';
+		$config['prev_link'] = '<i class="material-icons">chevron_left</i>';
+		$config['prev_tag_close'] = '</li>';
+		$config['cur_tag_open'] = '<li class="active">';
+		$config['cur_tag_close'] = '</li>';
+		$config['num_tag_open'] = '<li class="waves-effect">';
+		$config['num_tag_close'] = '</li>';
+		$config['reuse_query_string'] = TRUE;
+
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(3, 0)) ;
+		$listas_exercicios = $this->ListaExercicio->get_list($config["per_page"], $page, 2);
+
+		$this->load->view("Aluno/dashboard", array('option' => 'Simulados', 'userdate' => $this->session->user, 'listas_exercicios' => $listas_exercicios));
+	}
+
+	public function Exercicios(){
+		$this->load->library('pagination');
+		$this->load->model('ListaExercicio');
+
+		$config['base_url'] = 'http://127.0.0.1/index.php/Aluno/Exercicios';
+		$config['per_page'] = 20;
+
+		$config['full_tag_open'] = '<ul class="pagination">';
+		$config['full_tag_close'] = '</ul>';
+		$config['first_link'] = FALSE;
+		$config['last_link'] = FALSE;
+		$config['next_tag_open'] = '<li class="waves-effect">';
+		$config['next_link'] = '<i class="material-icons">chevron_right</i>';
+		$config['next_tag_close'] = '</li>';
+		$config['prev_tag_open'] = '<li class="waves-effect">';
+		$config['prev_link'] = '<i class="material-icons">chevron_left</i>';
+		$config['prev_tag_close'] = '</li>';
+		$config['cur_tag_open'] = '<li class="active">';
+		$config['cur_tag_close'] = '</li>';
+		$config['num_tag_open'] = '<li class="waves-effect">';
+		$config['num_tag_close'] = '</li>';
+		$config['reuse_query_string'] = TRUE;
+
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(3, 0)) ;
+		$listas_exercicios = $this->ListaExercicio->get_list($config["per_page"], $page, 1);
+
+		$this->load->view("Aluno/dashboard", array('option' => 'Exercicios', 'userdate' => $this->session->user, 'listas_exercicios' => $listas_exercicios));
+	}
+
+
 	public function Aulas(){
 		$this->load->library('pagination');
 		$this->load->model('Materia');
@@ -77,7 +140,7 @@ class Aluno extends CI_Controller {
 		$this->load->model('Materia');
 		$this->load->model('Aula');
 
-		$config['base_url'] = 'http://127.0.0.1/index.php/Aluno/Materia';
+		$config['base_url'] = 'http://127.0.0.1/index.php/Aluno/Conteudo';
 		$config['per_page'] = 20;
 
 		$config['full_tag_open'] = '<ul class="pagination">';
@@ -107,46 +170,7 @@ class Aluno extends CI_Controller {
 	}
 
 	public function AssistindoAula(){
-		$this->load->library('pagination');
-		$this->load->model('Conteudo');
-		$this->load->model('Materia');
-		$this->load->model('Aula');
-
-		$config['base_url'] = 'http://127.0.0.1/index.php/Aluno/Materia';
-		$config['per_page'] = 20;
-
-		$config['full_tag_open'] = '<ul class="pagination">';
-		$config['full_tag_close'] = '</ul>';
-		$config['first_link'] = FALSE;
-		$config['last_link'] = FALSE;
-		$config['next_tag_open'] = '<li class="waves-effect">';
-		$config['next_link'] = '<i class="material-icons">chevron_right</i>';
-		$config['next_tag_close'] = '</li>';
-		$config['prev_tag_open'] = '<li class="waves-effect">';
-		$config['prev_link'] = '<i class="material-icons">chevron_left</i>';
-		$config['prev_tag_close'] = '</li>';
-		$config['cur_tag_open'] = '<li class="active">';
-		$config['cur_tag_close'] = '</li>';
-		$config['num_tag_open'] = '<li class="waves-effect">';
-		$config['num_tag_close'] = '</li>';
-		$config['reuse_query_string'] = TRUE;
-
-		$this->pagination->initialize($config);
-		
-		$page = ($this->uri->segment(4, 0)) ;
-		$conteudoID = ($this->uri->segment(3, 0)) ;
-
-		$conteudo = $this->Conteudo->get($conteudoID);
-		$aulas = $this->Aula->get_list($config["per_page"], $page, $conteudoID);
-		$this->load->view("Aluno/assistirAula", array('option' => 'Conteudo', 'userdate' => $this->session->user, 'conteudo' => $conteudo, 'aulas' => $aulas));
-	}
-
-	public function Simulados(){
-		$this->load->view("Aluno/dashboard", array('option' => 'Simulados', 'userdate' => $this->session->user));
-	}
-
-	public function Exercicios(){
-		$this->load->view("Aluno/dashboard", array('option' => 'Exercicios', 'userdate' => $this->session->user));
+		/*	ToDO */
 	}
 
 	public function Grupos(){
