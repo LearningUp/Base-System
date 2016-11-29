@@ -58,7 +58,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="row">
                 <div class="col s12">
-                	<?php foreach ($materias as $mat): ?>
+                	<?php if(isset($materias) && !is_null($materias)): foreach ($materias as $mat): ?>
 					<div class="col m12 l6">
 						<div class="card teal darken-3" >
 							<div class="card-content white-text">
@@ -70,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							</div>
 						</div>
 					</div>
-                	<?php endforeach; ?>
+                	<?php endforeach; endif; ?>
                 </div>
             </div>
             <div class="row">
@@ -78,16 +78,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <?php echo $this->pagination->create_links(); ?>
                 </div>
             </div>
-            <script type="text/javascript">
-            $(document).ready(function() {
-                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-                $('.modal-trigger').leanModal();
-            });
-            </script>
             <?php endif; ?>
             <!-- END Aulas -->
             <!-- MAterias -->
-            <?php if($option == "Aulas"): ?>
+            <?php if($option == "Materia"): ?>
             <div class="row">
                 <div class="col s12">
                     <h1 class="center">Aulas de <?php echo $materia['nome']; ?></h1>
@@ -95,19 +89,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="row">
                 <div class="col s12">
-                	<?php foreach ($materias as $mat): ?>
-					<div class="col m12 l6">
-						<div class="card teal darken-3" >
-							<div class="card-content white-text">
-								<h5 class="card-title"><?php echo $mat['nome']; ?></h5>
-								<p><?php echo $mat['descricao']; ?></p>
-							</div>
-							<div class="card-action">
-								<?php echo  anchor('Aluno/Materia/'.$mat['id'], 'Ver aulas!', array('class' => 'btn waves-effect waves-blue'));  ?>
-							</div>
-						</div>
-					</div>
-                	<?php endforeach; ?>
+                    <?php if(isset($conteudos) && !is_null($conteudos)): foreach ($conteudos as $cont): ?>
+                    <div class="col m12 l6">
+                        <div class="card teal darken-3" >
+                            <div class="card-content white-text">
+                                <h5 class="card-title"><?php echo $cont['nome']; ?></h5>
+                                <p><?php echo $cont['descricao']; ?></p>
+                            </div>
+                            <div class="card-action">
+                                <?php echo  anchor('Aluno/Conteudo/'.$cont['id'], 'Ver aulas!', array('class' => 'btn waves-effect waves-blue'));  ?>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; endif; ?>
                 </div>
             </div>
             <div class="row">
@@ -115,14 +109,45 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <?php echo $this->pagination->create_links(); ?>
                 </div>
             </div>
-            <script type="text/javascript">
-            $(document).ready(function() {
-                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-                $('.modal-trigger').leanModal();
-            });
-            </script>
             <?php endif; ?>
             <!-- END MAterias -->
+            <!-- Conteudo -->
+            <?php if($option == "Conteudo"): ?>
+            <div class="row">
+                <div class="col s12">
+                    <h1 class="center">Aulas de <?php echo $conteudo['nome']; ?></h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <?php if(isset($aulas) && !is_null($aulas)): foreach ($aulas as $aula): ?>
+                    <div class="col m12 l6">
+                        <div class="card teal darken-3" >
+                            <div class="card-content white-text">
+                                <h5 class="card-title"><?php echo $aula['nome']; ?></h5>
+                                <p><?php echo $aula['descricao']; ?></p>
+                            </div>
+                            <div class="card-action">
+                                <?php echo  anchor('Aluno/AssistindoAula/'.$aula['id'], 'Assistir!', array('class' => 'btn waves-effect waves-blue'));  ?>
+                                <span class="white-text"> 55 minutos</span>
+                                <span class="badge ">
+                                <span class="chip"><?php echo (int)$aula['gostei']; ?> <i class="material-icons">&#xE8DC;</i></span> 
+                                <span class="chip"><?php echo (int)$aula['n_gostei']; ?> <i class="material-icons">&#xE8DB;</i></span> 
+                                <span class="chip"><?php echo (int)$aula['realizado']; ?>  <i class="material-icons">&#xE8F4;</i></span> 
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; endif; ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12 center">
+                    <?php echo $this->pagination->create_links(); ?>
+                </div>
+            </div>
+            <?php endif; ?>
+            <!-- END Conteudo -->
         </div>
         <?php endif; ?>
         <script type="text/javascript">
