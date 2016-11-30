@@ -6,6 +6,15 @@ class Aluno extends CI_Controller {
 		$this->load->view("Aluno/dashboard", array('option' => 'Home', 'userdate' => $this->session->user));
 	}
 
+	public function CancelarListaExercicios(){
+		//ToDo: Apagar dados da lista de exercicios da session
+	}
+
+	public function RealizarExercicio(){
+		//ToDo: Mostrar exercicios
+		//Está no formato ID Exercicio/ID Lista << talvez seja interessante remover a lista
+	}
+
 	public function RealizarListaExercicios(){
 		$this->load->model('ListaExercicio');
 		$this->load->model('Exercicio');
@@ -41,7 +50,7 @@ class Aluno extends CI_Controller {
 		$this->load->library('pagination');
 		$this->load->model('ListaExercicio');
 
-		$config['base_url'] = 'http://127.0.0.1/index.php/Aluno/Simulados';
+		$config['base_url'] = site_url().'/Aluno/Simulados';
 		$config['per_page'] = 20;
 
 		$config['full_tag_open'] = '<ul class="pagination">';
@@ -72,7 +81,7 @@ class Aluno extends CI_Controller {
 		$this->load->library('pagination');
 		$this->load->model('ListaExercicio');
 
-		$config['base_url'] = 'http://127.0.0.1/index.php/Aluno/Exercicios';
+		$config['base_url'] = site_url().'/Aluno/Exercicios';
 		$config['per_page'] = 20;
 
 		$config['full_tag_open'] = '<ul class="pagination">';
@@ -103,9 +112,9 @@ class Aluno extends CI_Controller {
 	public function Aulas(){
 		$this->load->library('pagination');
 		$this->load->model('Materia');
-
-		$config['base_url'] = 'http://127.0.0.1/index.php/Aluno/Aulas';
-		$config['per_page'] = 20;
+		$config = array();
+		$config['base_url'] = site_url().'/Aluno/Aulas';
+		$config['per_page'] = 4;
 
 		$config['full_tag_open'] = '<ul class="pagination">';
 		$config['full_tag_close'] = '</ul>';
@@ -128,6 +137,8 @@ class Aluno extends CI_Controller {
 		$page = ($this->uri->segment(3, 0)) ;
 		$materias = $this->Materia->get_list($config["per_page"], $page);
 
+		$config['total_rows'] = count(40); // << Problemas
+
 		$this->load->view("Aluno/dashboard", array('option' => 'Aulas', 'userdate' => $this->session->user, 'materias' => $materias));
 	}
 
@@ -136,7 +147,7 @@ class Aluno extends CI_Controller {
 		$this->load->model('Conteudo');
 		$this->load->model('Materia');
 
-		$config['base_url'] = 'http://127.0.0.1/index.php/Aluno/Materia';
+		$config['base_url'] = site_url().'/Aluno/Materia';
 		$config['per_page'] = 20;
 
 		$config['full_tag_open'] = '<ul class="pagination">';
@@ -171,7 +182,7 @@ class Aluno extends CI_Controller {
 		$this->load->model('Materia');
 		$this->load->model('Aula');
 
-		$config['base_url'] = 'http://127.0.0.1/index.php/Aluno/Conteudo';
+		$config['base_url'] = site_url().'/Aluno/Conteudo';
 		$config['per_page'] = 20;
 
 		$config['full_tag_open'] = '<ul class="pagination">';

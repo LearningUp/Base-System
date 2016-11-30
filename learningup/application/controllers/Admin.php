@@ -12,7 +12,7 @@ class Admin extends CI_Controller {
 		$this->load->library('pagination');
 		$this->load->model('mylog');
 
-		$config['base_url'] = 'http://127.0.0.1/learningup/index.php/Admin/logs';
+		$config['base_url'] = site_url().'/Admin/logs';
 		$config['per_page'] = 20;
 
 		$config['full_tag_open'] = '<ul class="pagination">';
@@ -79,7 +79,7 @@ class Admin extends CI_Controller {
 			return;
 		}
 
-		$config['base_url'] = 'http://127.0.0.1/learningup/index.php/Admin/users';
+		$config['base_url'] = site_url().'/Admin/users';
 		$config['per_page'] = 20;
 
 		$config['full_tag_open'] = '<ul class="pagination">';
