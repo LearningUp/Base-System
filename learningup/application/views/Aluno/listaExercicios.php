@@ -57,12 +57,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <br>
             <?php echo anchor('Aluno/RealizarExercicio/'.$outros_exercicios[++$exercicio_atual]['id']."/".$lista_exercicio['id'], "Proximo >", array('class' => 'waves-effect waves-blue btn right')); ?>
             <?php echo anchor('Aluno/CancelarListaExercicios/', "Cancelar", array('class' => 'waves-effect waves-purple red btn left')); ?>
+            <?php endif; ?>
+            <?php if ($option == "Exercicio"): ?>
+            <h5><?php echo $exercicio_atual + 1; ?> - <?php echo $exercicio['titulo']; ?></h5>
+            <p>(<?php echo $exercicio['fonte']; ?>) - <?php echo $exercicio['texto']; ?></p>
+            <form action="#">
+                <?php foreach ($exercicio['opcoes'] as $op): ?>
+                    <p>
+                        <input class="with-gap" type="radio" name="resposta" id="resposta<?php echo $op['id']; ?>" value="<?php echo $op['id']; ?>" required> 
+                        <label for="resposta<?php echo $op['id']; ?>"><?php echo $op['texto']; ?></label>
+                    </p>
+                <?php endforeach; ?>
+                <button type="submit" class="btn right waves-blue waves-effect">Proximo</button>
+            </form>
             <?php endif ?>
         </div>
         <?php endif; ?>
+
         <script type="text/javascript">
         $(document).ready(function() {
-            // Activate the side menu 
             $("#slide-out").sideNav('show');
         });
         </script>

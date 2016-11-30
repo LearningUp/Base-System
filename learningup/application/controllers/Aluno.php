@@ -11,8 +11,25 @@ class Aluno extends CI_Controller {
 	}
 
 	public function RealizarExercicio(){
+		$this->load->model('Exercicio');
 		//ToDo: Mostrar exercicios
 		//Está no formato ID Exercicio/ID Lista << talvez seja interessante remover a lista
+
+		$eID = ($this->uri->segment(3, 0)) ;
+		$lista = $this->session->lista_exercicio;
+		$eAtual = $lista['exercicio_atual'];
+		print_r($eAtual);
+		if($eAtual < 0 || $eID != $this->session->lista_exercicio['exercicios'][$eAtual]['id']){
+			++$eAtual;
+			$lista['exercicio_atual'] = $eAtual;
+			$this->session->lista_exercicio = $lista;
+		}
+
+		$exercicio = $this->Exercicio->get($lista['exercicios'][$eAtual]['id']);
+
+		print_r($exercicio);
+
+		$this->load->view("Aluno/listaExercicios", array('option' => 'Exercicio', 'userdate' => $this->session->user, 'lista_exercicio' => $this->session->lista_exercicio['dados_lista'], "outros_exercicios" => $this->session->lista_exercicio['exercicios'], "qntExercicios" => count($this->session->lista_exercicio['exercicios']), 'exercicio_atual' => $this->session->lista_exercicio['exercicio_atual'], 'exercicio' => $exercicio));
 	}
 
 	public function RealizarListaExercicios(){
