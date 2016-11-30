@@ -27,5 +27,19 @@
 
         return $data;
     }
+
+    function get($id){
+        $this->db->from('lista_de_exercicio')->where("id", $id);
+
+        $query = $this->db->get();
+        if($query->num_rows() == 0)
+            return null;
+
+        foreach ($query->result_array() as $row) {
+            $data[] = $row;
+        }
+
+        return $data[0];
+    }
   }
 ?>

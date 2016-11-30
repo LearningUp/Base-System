@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </li>
         </ul>
         <?php if(isset($option)): ?>
-        <div class="container adminMain">
+        <div class="container-fluid adminMain" style="margin-left: 240px;">
             <!-- Exercicios & Simulados -->
             <?php if($option == "Exercicios" || $option == "Simulados"): ?>
             <div class="row">
