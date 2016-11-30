@@ -6,30 +6,65 @@ class Aluno extends CI_Controller {
 		$this->load->view("Aluno/dashboard", array('option' => 'Home', 'userdate' => $this->session->user));
 	}
 
+	public function ChecarResposta(){
+		$resposta = $this->input->post('resposta');
+		$lista = $this->session->lista_exercicio;	
+		$eAtual = $lista['exercicio_atual'];
+
+		if(!is_null($resposta)){
+			$exercicio = $this->session->exercicio_dados;
+			
+			$index = 0;
+			while($resposta != $exercicio['opcoes'][$index]['id'])
+				++$index;
+
+			$respostas = $this->session->respostas;
+
+			if($exercicio['opcoes'][$index]['certo'] == 1)
+				$respostas[$eAtual] = array('correto' => true, 'resposta' => $resposta);
+			else
+				$respostas[$eAtual] = array('correto' => false, 'resposta' => $resposta);
+
+			$this->session->respostas = $respostas;
+			++$eAtual;
+			$lista['exercicio_atual'] = $eAtual;
+			$this->session->lista_exercicio = $lista;
+		}
+
+		redirect("Aluno/RealizarExercicio/".$lista['exercicios'][$eAtual]['id']."/".$this->session->lista_exercicio['dados_lista']['id']);
+	}
+
 	public function CancelarListaExercicios(){
 		//ToDo: Apagar dados da lista de exercicios da session
+		$this->session->unset_userdata("lista_exercicio");
+		$this->session->unset_userdata("exercicio_dados");
+		$this->session->unset_userdata("respostas");
+		redirect("Aluno/Exercicios");
 	}
 
 	public function RealizarExercicio(){
 		$this->load->model('Exercicio');
 		//ToDo: Mostrar exercicios
 		//Está no formato ID Exercicio/ID Lista << talvez seja interessante remover a lista
-
 		$eID = ($this->uri->segment(3, 0)) ;
 		$lista = $this->session->lista_exercicio;
 		$eAtual = $lista['exercicio_atual'];
-		print_r($eAtual);
-		if($eAtual < 0 || $eID != $this->session->lista_exercicio['exercicios'][$eAtual]['id']){
+		if($eAtual < 0){
 			++$eAtual;
-			$lista['exercicio_atual'] = $eAtual;
-			$this->session->lista_exercicio = $lista;
 		}
+		if($eID != $this->session->lista_exercicio['exercicios'][$eAtual]['id']){
+			$index = 0;
+			while($eID != $this->session->lista_exercicio['exercicios'][$index]['id'])
+				++$index;
+			$eAtual = $index;
+		}
+		$lista['exercicio_atual'] = $eAtual;
+		$this->session->lista_exercicio = $lista;
 
 		$exercicio = $this->Exercicio->get($lista['exercicios'][$eAtual]['id']);
+		$this->session->exercicio_dados = $exercicio;
 
-		print_r($exercicio);
-
-		$this->load->view("Aluno/listaExercicios", array('option' => 'Exercicio', 'userdate' => $this->session->user, 'lista_exercicio' => $this->session->lista_exercicio['dados_lista'], "outros_exercicios" => $this->session->lista_exercicio['exercicios'], "qntExercicios" => count($this->session->lista_exercicio['exercicios']), 'exercicio_atual' => $this->session->lista_exercicio['exercicio_atual'], 'exercicio' => $exercicio));
+		$this->load->view("Aluno/listaExercicios", array('option' => 'Exercicio', 'userdate' => $this->session->user, 'lista_exercicio' => $this->session->lista_exercicio['dados_lista'], "outros_exercicios" => $this->session->lista_exercicio['exercicios'], "qntExercicios" => count($this->session->lista_exercicio['exercicios']), 'exercicio_atual' => $this->session->lista_exercicio['exercicio_atual'], 'exercicio' => $exercicio, 'resultados' => $this->session->respostas));
 	}
 
 	public function RealizarListaExercicios(){
@@ -37,7 +72,6 @@ class Aluno extends CI_Controller {
 		$this->load->model('Exercicio');
 		
 		$listaID = ($this->uri->segment(3, 0)) ;
-
 		if(isset($this->session->lista_exercicio)){
 			$l = $this->session->lista_exercicio["exercicios"];
 			$atual = $this->session->lista_exercicio['exercicio_atual'];
@@ -60,7 +94,7 @@ class Aluno extends CI_Controller {
 			$this->session->respostas = $respostas;
 		}
 
-		$this->load->view("Aluno/listaExercicios", array('option' => 'BemVindo', 'userdate' => $this->session->user, 'lista_exercicio' => $this->session->lista_exercicio['dados_lista'], "outros_exercicios" => $this->session->lista_exercicio['exercicios'], "qntExercicios" => count($this->session->lista_exercicio['exercicios']), 'exercicio_atual' => $this->session->lista_exercicio['exercicio_atual']));
+		$this->load->view("Aluno/listaExercicios", array('option' => 'BemVindo', 'userdate' => $this->session->user, 'lista_exercicio' => $this->session->lista_exercicio['dados_lista'], "outros_exercicios" => $this->session->lista_exercicio['exercicios'], "qntExercicios" => count($this->session->lista_exercicio['exercicios']), 'exercicio_atual' => $this->session->lista_exercicio['exercicio_atual'], 'resultados' => $this->session->respostas));
 	}
 
 	public function Simulados(){
