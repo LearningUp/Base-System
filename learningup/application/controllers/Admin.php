@@ -6,7 +6,11 @@ class Admin extends CI_Controller {
 		$this->load->view("admin/admin");
 	}
 	public function formMateria(){
-		$this->load->view("admin/FormSubject");
+
+	}
+	public function listSubjects($errors = 0){
+		$this->load->view("admin/admin.php");
+		$this->load->view('admin/FormSubject');
 	}
 	public function logs(){
 		$this->load->library('pagination');
@@ -173,30 +177,34 @@ class Admin extends CI_Controller {
 				'label' => 'cor',
 				'rules' => 'required'
 			),
-			array(
-				'field' => 'img',
-				'label' => 'img',
-				'rules' => 'required'
-			),
+			
 
 		);
 		$this->form_validation->set_rules($regras);
-		$config["upload_path"] = "./uploads/subjectImg/.";
+		$config["upload_path"] = "application/uploads/subjects/";
 		$config["allowed_types"] = "png|jpeg|gif";
-		$config["max_size"] = 100;
+		$config["max_size"] = 1000;
 		$config ["max_weigth"] = 1024;
 		$config["max_height"] = 768;
 		$this->load->library('upload',$config);
+		echo getcwd();
+		is_dir($config['upload_path']) or die('test');
 		if($this->form_validation->run() == false){
-			echo validation_errors();
+			$data['error'] = validation_errors();
+			$this->load->view('admin/FormSubject',$data);
 		}else{
 			$dados = $arrayName = array(
 				'nome' => $this->input->post('nome'),
 				'descricao' => $this->input->post('descricao'),
 				'cor' => $this->input->post('cor'),
-				'imagem' => $this->input->post('imagem')
+				'imagem' => $this->input->post('img')
 			);
-			$this->upload->do_upload($dados['imagem']);
+			if(! ($this->upload->do_upload('img'))){
+				echo $this->upload->display_errors();
+			}
+			var_dump($this->upload->data());
+			$dados['imagem'] = $this->upload->data()['file_name'];
+			var_dump($this->upload->data());
 			$this->Subject->create($dados);
 		}
 	}

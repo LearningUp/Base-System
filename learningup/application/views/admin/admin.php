@@ -37,7 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <?php echo anchor( 'Admin/index', 'Fórum', array( 'class'=> 'waves-effect waves-teal')); ?>
             </li>
             <li class="<?php echo (isset($option) && $option == 'materias' ? 'active' : ''); ?>">
-                <?php echo anchor('Admin/index', 'Matérias', array('class' => 'waves-effect waves-teal')); ?>
+                <?php echo anchor('Admin/listSubjects', 'Matérias', array('class' => 'waves-effect waves-teal')); ?>
             </li>
             <li class="<?php echo (isset($option) && $option == 'conteudos' ? 'active' : ''); ?>">
                 <?php echo anchor('Admin/index', 'Conteúdos', array('class' => 'waves-effect waves-teal')); ?>
@@ -54,9 +54,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </li>
         </ul>
         <?php if(isset($option)): ?>
-        <div class="container adminMain
-">
+        <div class="container-fluid adminMain" style="margin-left: 240px;">
             <!-- LOG -->
+            <!--<div class="row">
+              <div class="col s12" style="margin-left:240px">
+                <?php
+                 /* if(isset($content)&&$options == 'materias'){
+                    echo $content;
+                  }*/
+                ?>
+              </div>-->
+            </div>
             <?php if($option == "logs"): ?>
             <div class="row">
                 <div id="confirmacao" class="modal">
@@ -137,7 +145,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <script type="text/javascript">
             $(document).ready(function() {
-                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                // the "href" attribute of
+
+               .modal-trigger must specify the modal ID that wants to be triggered
                 $('.modal-trigger').leanModal();
             });
             </script>
@@ -330,6 +340,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
             </div>
             <?php echo form_close(); ?>
+            <!-- End user view-->
+            <!-- cadastar materia-->
             <script type="text/javascript">
             function toggleEditable() {
                 $('#nome').prop('disabled', false);
@@ -368,7 +380,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <?php endif; ?>
         <script type="text/javascript">
         $(document).ready(function() {
-            // Activate the side menu 
+            // Activate the side menu
             $("#slide-out").sideNav('show');
         });
         </script>
