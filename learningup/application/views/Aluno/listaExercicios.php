@@ -33,7 +33,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <li class="divider"></li>
             <?php $i = 1; foreach ($outros_exercicios as $oe): ?>
             <li>
-                <?php echo anchor('Aluno/RealizarExercicio/'.$oe['id']."/".$lista_exercicio['id'], "<b>".$i."</b> - ".$oe['titulo'], array('class' => 'waves-effect waves-blue white-text')); ?>
+                <?php echo anchor('Aluno/RealizarExercicio/'.$oe['id']."/".$lista_exercicio['id'], "<b>".$i."</b> - ".$oe['titulo'].($resultados[$i-1] != NULL ? ($resultados[$i-1]['correto'] == 1 ? " - Acertou" : " - Errou" ) : ""), array('class' => 'waves-effect waves-blue white-text'));
+                ?>
             </li>
             <?php ++$i; endforeach; unset($i); ?>
             <li class="divider"></li>
@@ -61,11 +62,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <?php if ($option == "Exercicio"): ?>
             <h5><?php echo $exercicio_atual + 1; ?> - <?php echo $exercicio['titulo']; ?></h5>
             <p>(<?php echo $exercicio['fonte']; ?>) - <?php echo $exercicio['texto']; ?></p>
-            <form action="#">
+            <?php echo form_open("Aluno/ChecarResposta"); ?>
                 <?php foreach ($exercicio['opcoes'] as $op): ?>
                     <p>
-                        <input class="with-gap" type="radio" name="resposta" id="resposta<?php echo $op['id']; ?>" value="<?php echo $op['id']; ?>" required> 
-                        <label for="resposta<?php echo $op['id']; ?>"><?php echo $op['texto']; ?></label>
+                        <input class="with-gap <?php if($resultados[$exercicio_atual]['correto'] == FALSE) echo 'errado'; else echo 'certo'; ?>" type="radio" name="resposta" id="resposta<?php echo $op['id']; ?>" value="<?php echo $op['id']; ?>" required <?php if(!is_null($resultados[$exercicio_atual])){ echo "disabled "; if($resultados[$exercicio_atual]['resposta'] == $op['id']) echo "checked ";} ?>>
+                        <label for="resposta<?php echo $op['id']; ?>"><?php echo $op['texto'];?></label>
                     </p>
                 <?php endforeach; ?>
                 <button type="submit" class="btn right waves-blue waves-effect">Proximo</button>
