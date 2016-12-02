@@ -31,15 +31,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 Tempo restante: 5:00
             </li>
             <li class="divider"></li>
-            <?php $i = 1; foreach ($outros_exercicios as $oe): ?>
-            <li>
+            <?php if(!is_null($outros_exercicios)){ $i = 1; foreach ($outros_exercicios as $oe): ?>
+            <li class="<?php if($exercicio_atual == $i - 1) echo 'active'; ?>">
                 <?php echo anchor('Aluno/RealizarExercicio/'.$oe['id']."/".$lista_exercicio['id'], "<b>".$i."</b> - ".$oe['titulo'].($resultados[$i-1] != NULL ? ($resultados[$i-1]['correto'] == 1 ? " - Acertou" : " - Errou" ) : ""), array('class' => 'waves-effect waves-blue white-text'));
                 ?>
             </li>
-            <?php ++$i; endforeach; unset($i); ?>
+            <?php ++$i; endforeach; unset($i); } ?>
             <li class="divider"></li>
             <li>
-                <?php echo anchor('Aluno/CancelarListaExercicios', 'Cancelar', array('class' => 'waves-effect waves-red white-text')); ?>
+                <?php if (!isset($option) || $option != "Resultado"): ?>
+                <?php echo anchor('Aluno/FinalizarListaExercicios', 'Finalizar', array('class' => 'waves-effect waves-blue white-text blue')); ?>
+                <?php echo anchor('Aluno/CancelarListaExercicios', 'Cancelar', array('class' => 'waves-effect waves-red white-text red')); ?>                    
+                <?php else: ?>
+                <?php echo anchor('Aluno/Exercicios', 'Voltar', array('class' => 'waves-effect waves-blue white-text blue')); ?>
+                <?php endif; ?>
             </li>
         </ul>
         <?php if(isset($option)): ?>
@@ -69,8 +74,54 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <label for="resposta<?php echo $op['id']; ?>"><?php echo $op['texto'];?></label>
                     </p>
                 <?php endforeach; ?>
-                <button type="submit" class="btn right waves-blue waves-effect">Proximo</button>
+                <button type="submit" class="btn right waves-blue waves-effect"><?php if($exercicio_atual + 1 < $qntExercicios) echo "Proximo"; else echo "Concluir"; ?></button>
             </form>
+            <?php endif ?>
+            <?php if ($option == "Resultado"): ?>
+                <h2>Resultado - <?php echo $lista_exercicio['titulo']; ?></h2>
+                <table>
+                    <thead> 
+                        <tr>
+                            <td>Resultado</td>
+                            <td>Valor</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Acertos</td>
+                            <td><?php echo $acertos; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Erros</td>
+                            <td><?php echo $erros; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Em branco</td>
+                            <td><?php echo $em_branco; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Nota</td>
+                            <td><?php echo $nota; ?>%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>#</td>
+                            <td>Acerto?</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php for($i = 0; $i < count($resultados); ++$i): ?>
+                        <tr>
+                            <td><?php echo $i + 1; ?></td>
+                            <td><?php if(is_null($resultados[$i])) echo "-"; else echo $resultados[$i]['correto'] ? ":)" : "X"; ?></td>
+                        </tr>
+                        <?php endfor; ?>
+                    </tbody>
+                </table>
             <?php endif ?>
         </div>
         <?php endif; ?>

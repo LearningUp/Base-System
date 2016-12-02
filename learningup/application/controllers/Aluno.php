@@ -6,12 +6,57 @@ class Aluno extends CI_Controller {
 		$this->load->view("Aluno/dashboard", array('option' => 'Home', 'userdate' => $this->session->user));
 	}
 
+	public function FinalizarListaExercicios(){
+		if(!isset($this->session->lista_exercicio))
+			redirect("Aluno/Exercicios");
+		$acertos = 0;
+		$erros = 0;
+		$em_branco = 0;
+		$nota = 0;
+
+		foreach ($this->session->respostas as $res) {
+			if(is_null($res)){
+				++$em_branco;
+			}else if($res['correto']){
+				++$acertos;
+			}else{
+				++$erros;
+			}
+		}
+
+		$nota = ($acertos / count($this->session->lista_exercicio['exercicios'])) * 100;
+		
+		$dados_lista = $this->session->lista_exercicio['dados_lista'];
+		$lista_exercicio = $this->session->lista_exercicio['exercicios'];
+		$reps = $this->session->respostas;
+
+		$this->session->unset_userdata("lista_exercicio");
+		$this->session->unset_userdata("exercicio_dados");
+		$this->session->unset_userdata("respostas");
+
+		$this->load->view("Aluno/listaExercicios",
+			array('option' => 'Resultado',
+				'userdate' => $this->session->user,
+				'lista_exercicio' => $dados_lista,
+				"outros_exercicios" => NULL,
+				"qntExercicios" => count($lista_exercicio),
+				'resultados' => $resp,
+				'acertos' => $acertos,
+				'erros' => $erros,
+				'em_branco' => $em_branco,
+				'nota' => $nota));
+	}
+
 	public function ChecarResposta(){
 		$resposta = $this->input->post('resposta');
 		$lista = $this->session->lista_exercicio;	
 		$eAtual = $lista['exercicio_atual'];
 
-		if(!is_null($resposta)){
+		if(!is_null($this->session->respostas[$eAtual])){
+			++$eAtual;
+			$lista['exercicio_atual'] = $eAtual;
+			$this->session->lista_exercicio = $lista;			
+		}else if(!is_null($resposta)){
 			$exercicio = $this->session->exercicio_dados;
 			
 			$index = 0;
@@ -72,6 +117,7 @@ class Aluno extends CI_Controller {
 		$this->load->model('Exercicio');
 		
 		$listaID = ($this->uri->segment(3, 0)) ;
+
 		if(isset($this->session->lista_exercicio)){
 			$l = $this->session->lista_exercicio["exercicios"];
 			$atual = $this->session->lista_exercicio['exercicio_atual'];
