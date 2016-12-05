@@ -24,8 +24,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </nav>
         <ul id="side-menu" class="side-nav right fixed">
             <li class="grey user-sidebar-info">
-                <img id="userImage" class="circle responsive-img user-img" src="http://www.hardcodex.net/learnup/img/user.png" />
-                <b id=" userName " class="truncate user-name white-text ">{Username}</b>
+                <img id="userImage" class="circle responsive-img user-img" src="https://www.placecage.com/gif/300/300" />
+                <b id=" userName " class="truncate user-name white-text "><?php echo $userdata->nome; ?></b>
             </li>
             <li class="<?php echo (isset($option) && $option == 'logs' ? 'active' : ''); ?>">
                 <?php echo anchor('Admin/logs', 'Logs', array('class' => 'waves-effect waves-teal')); ?>
@@ -54,16 +54,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </li>
         </ul>
         <?php if(isset($option)): ?>
-        <div class="container-fluid adminMain" style="margin-left: 240px; background: white;">
+        <div class="container-fluid adminMain" style="margin-left:240px;">
             <!-- LOG -->
-            <!--<div class="row">
-              <div class="col s12" style="margin-left:240px">
-                <?php
-                 /* if(isset($content)&&$options == 'materias'){
-                    echo $content;
-                  }*/
-                ?>
-              </div>-->
+            <?php
+                if($option == "materias"):
+            ?>
+                
+                <div class="row">
+                    <div class="col s12">
+                        <h2>Lista de Materias</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s1 offset-s11 "><a href="<?php echo base_url(); ?>index.php/Admin/formMateria" class="waves-effect waves-light btn"><i class="material-icons">add</i></a></div>
+                </div>
+                 <div class="row">
+                    <div class="col s12">
+                        <table class="centered highlight">
+                            <thead>
+                                <th>ID</th>
+                                <th>Nome</th>
+                            </thead>
+                            <tbody>
+                                <?php if($materias != null) foreach($materias as $row): ?>
+                                <tr>
+                                    <td>
+                                        <?php echo $row['id'] ?>
+
+                                    </td>
+                                    <td>
+                                        <?php echo $row['nome'] ?>
+                                    </td>
+                                    <td>
+                                        <img alt="error" height="50" width="50" src="<?php echo $row['imagem'];?>"/>
+                                    </td>
+                                </tr>
+                                <?php endforeach;?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <?php
+                endif;
+            ?>
             <?php if($option == "logs"): ?>
             <div class="row">
                 <div id="confirmacao" class="modal">

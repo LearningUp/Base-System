@@ -2,22 +2,44 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Admin extends CI_Controller {
+	public function isLoged(){
+		return $this->session->has_userdata('user') && $this->session->user->id != null;
+	}
+	public function checkLoged($redir = "LearningUp/login"){
+		if(!$this->isLoged())
+			redirect($redir);
+		return true;
+	}
 	public function index(){
-		$this->load->view("admin/admin");
+		$this->checkLoged();
+		$data = array('userdata' =>$this->session->user,'option','logs');
+		$this->load->view("admin/admin",$data);
+		
 	}
 	public function formMateria(){
+		$this->checkLoged();
+		$this->load->view("admin/admin",array('userdata'=>$this->session->user));
+		$this->load->view("admin/FormSubject");
 
 	}
 	public function listSubjects($errors = 0){
+		$this->checkLoged();
 		$this->load->view("admin/admin.php");
-		$this->load->view('admin/FormSubject');
+		$this->load->library('pagination');
+		$this->load->model("Subject");
+
+		$this->uri->segment(3);
+		$list = $this->Subject->get();
+		
+		$this->load->view("admin/admin", array('option' => 'materias', 'materias' => $list,'userdata'=>$this->session->user));
 	}
 	public function logs(){
+		$this->checkLoged();
 		$this->load->library('pagination');
 		$this->load->model('mylog');
 
 		$config['base_url'] = site_url().'/Admin/logs';
-		$config['per_page'] = 20;
+		$config['per_page'] = 99999999;
 
 		$config['full_tag_open'] = '<ul class="pagination">';
 		$config['full_tag_close'] = '</ul>';
@@ -34,9 +56,8 @@ class Admin extends CI_Controller {
 		$config['num_tag_open'] = '<li class="waves-effect">';
 		$config['num_tag_close'] = '</li>';
 		$config['reuse_query_string'] = TRUE;
-
+		
 		$this->pagination->initialize($config);
-
 		if($this->uri->segment(3) == "search"){
 			$page = ($this->uri->segment(4, 0)) ;
 			$logList = $this->mylog->get_filtered_list($config["per_page"], $page, $this->input->get('search_bar'));
@@ -47,7 +68,7 @@ class Admin extends CI_Controller {
 		$config['total_rows'] = count($logList);
 
 		//$logs = $this->log->
-		$this->load->view("admin/admin", array('option' => 'logs', 'logs' => $logList));
+		$this->load->view("admin/admin", array('option' => 'logs', 'logs' => $logList,'userdata'=>$this->session->user));
 	}
 
 	public function apagarLog($id, $base){
@@ -68,23 +89,25 @@ class Admin extends CI_Controller {
 	}
 
 	public function apagarLogs(){
+		$this->checkLoged();
 		$this->load->model('mylog');
 		$this->mylog->deleteAll();
 		redirect('Admin/logs');
 	}
 
 	public function users($type='', $id = null){
+		$this->checkLoged();
 		$this->load->library('pagination');
 		$this->load->model('user');
 
 		if(($this->uri->segment(3) == "view" || $type == "view") && ($this->uri->segment(4, -1) != -1 || $id != null)){
 			$user = $this->user->get_by_id($this->uri->segment(4, $id));
-			$this->load->view("admin/admin", array('option' => 'userView', 'user' => $user));
+			$this->load->view("admin/admin", array('option' => 'userView', 'user' => $user, 'userdata' => $this->session->user));
 			return;
 		}
 
 		$config['base_url'] = site_url().'/Admin/users';
-		$config['per_page'] = 20;
+		$config['per_page'] = 9999999;
 
 		$config['full_tag_open'] = '<ul class="pagination">';
 		$config['full_tag_close'] = '</ul>';
@@ -113,7 +136,7 @@ class Admin extends CI_Controller {
 		}
 		$config['total_rows'] = count ($userList);
 
-		$this->load->view("admin/admin", array('option' => 'users', 'users' => $userList));
+		$this->load->view("admin/admin", array('option' => 'users', 'users' => $userList,'userdata'=>$this->session->user));
 	}
 
 	public function updateUser(){
@@ -159,6 +182,7 @@ class Admin extends CI_Controller {
 		redirect('Admin/users');
 	}
 	public function createSubject(){
+		$this->checkLoged();
 		$this->load->library("form_validation");
 		$this->load->model("Subject");
 		$regras = array(
@@ -181,14 +205,13 @@ class Admin extends CI_Controller {
 
 		);
 		$this->form_validation->set_rules($regras);
-		$config["upload_path"] = "application/uploads/subjects/";
+		$config["upload_path"] = "/var/www/html/Base-System/learningup/uploads/";
 		$config["allowed_types"] = "png|jpeg|gif";
-		$config["max_size"] = 1000;
+		$config["max_size"] = 200000;
 		$config ["max_weigth"] = 1024;
 		$config["max_height"] = 768;
 		$this->load->library('upload',$config);
-		echo getcwd();
-		is_dir($config['upload_path']) or die('test');
+		is_dir($config['upload_path']) or die('diretorio de upload não encontrado');
 		if($this->form_validation->run() == false){
 			$data['error'] = validation_errors();
 			$this->load->view('admin/FormSubject',$data);
@@ -197,15 +220,15 @@ class Admin extends CI_Controller {
 				'nome' => $this->input->post('nome'),
 				'descricao' => $this->input->post('descricao'),
 				'cor' => $this->input->post('cor'),
-				'imagem' => $this->input->post('img')
+				'imagem' => ""
 			);
 			if(! ($this->upload->do_upload('img'))){
 				echo $this->upload->display_errors();
 			}
-			var_dump($this->upload->data());
-			$dados['imagem'] = $this->upload->data()['file_name'];
-			var_dump($this->upload->data());
+			$dados['imagem'] = base_url().('uploads/subjects/').$this->upload->data()['file_name'];
+			$data = array('option'=>'materias');
 			$this->Subject->create($dados);
+			$this->load->view("admin/admin",array('userdata'=>$this->session->user));
 		}
 	}
 }

@@ -92,7 +92,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <?php endforeach; ?>
                 <button type="submit" class="btn right waves-blue waves-effect"><?php if($exercicio_atual + 1 < $qntExercicios) echo "Proximo"; else echo "Concluir"; ?></button>
             </form>
-            <?php endif ?>
+            <?php endif; ?>
             <?php if ($option == "Resultado"): ?>
                 <h2>Resultado - <?php echo $lista_exercicio['titulo']; ?></h2>
                 <table>

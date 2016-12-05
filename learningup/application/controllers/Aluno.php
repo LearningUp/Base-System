@@ -5,7 +5,6 @@ class Aluno extends CI_Controller {
 	public function isLoged(){
 		return $this->session->has_userdata('user') && $this->session->user->id != null;
 	}
-	
 	public function checkLoged($redir = "LearningUp/login"){
 		if(!$this->isLoged())
 			redirect($redir);
@@ -383,14 +382,15 @@ class Aluno extends CI_Controller {
 
 
 	public function startSimulate(){
-
 		$this->checkLoged();
 		$this->load->view("Simulate/simulateAwser");
 	}
+
 	public function formQuestion(){
 		$this->checkLoged();
 		$this->load->view("Aluno/FormQuestion");
 	}
+
 	public function createQuestion(){
 		$this->checkLoged();
 		$this->load->library("form_validation");

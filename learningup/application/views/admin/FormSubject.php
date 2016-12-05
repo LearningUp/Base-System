@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Question View</title>
   </head>
-  <body class="white">
+  <body>
     <div style="margin-left:242px">
       <?php
         echo form_open_multipart("Admin/createSubject"); 

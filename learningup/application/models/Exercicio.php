@@ -49,7 +49,7 @@
         return $data;
     }
     
-    function get_titles($lista_id, $lenght = 5, $concat = "..."){
+    function get_titles($lista_id, $lenght = 4, $concat = "..."){
         $this->db->select("concat(substring(exercicio.titulo, 1, ".$lenght."), \"".$concat."\") titulo, id")->from('learningup_db.exercicio, lista_de_exercicio_has_exercicio')->where("lista_de_exercicio_has_exercicio.lista_de_exercicio_id", $lista_id)->where("lista_de_exercicio_has_exercicio.exercicio_id = exercicio.id");
 
         $query = $this->db->get();

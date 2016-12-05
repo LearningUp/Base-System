@@ -1,4 +1,4 @@
-<?php 
+<?php
 class User extends CI_Model {
 	 public function __construct()
     {
@@ -57,7 +57,7 @@ class User extends CI_Model {
     function get_list($rows, $offset=null){
         $this->db->limit($rows, $offset);
         $this->db->from('user');
-        $this->db->select('id, email, nome, sobrenome, dt_nascimento, dt_cadastro, tipo, sexo, foto');
+        $this->db->select('id, email, nome, sobrenome, dt_nascimento, dt_cadastro, tipo, sexo');
         $query = $this->db->get();
         if($query->num_rows() == 0)
             return null;
@@ -79,7 +79,7 @@ class User extends CI_Model {
         if(intval($search) != 0){
             $this->db->or_where('tipo =', $search);
             $this->db->or_where('id = ',$search);
-        }   
+        }
         $query = $this->db->get();
         if($query->num_rows() == 0)
             return null;
