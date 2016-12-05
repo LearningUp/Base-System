@@ -41,5 +41,9 @@
 
         return $data[0];
     }
+
+    function AumentarRealizados($id){
+        $this->db->where("id", $id)->set("realizado","realizado + 1",FALSE)->update("lista_de_exercicio");
+    }
   }
 ?>

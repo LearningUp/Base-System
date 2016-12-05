@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </li>
         </ul>
         <?php if(isset($option)): ?>
-        <div class="container-fluid adminMain" style="margin-left: 240px;">
+        <div class="container-fluid adminMain" style="margin-left: 240px; background: white;">
             <!-- LOG -->
             <!--<div class="row">
               <div class="col s12" style="margin-left:240px">
@@ -64,7 +64,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   }*/
                 ?>
               </div>-->
-            </div>
             <?php if($option == "logs"): ?>
             <div class="row">
                 <div id="confirmacao" class="modal">
