@@ -2,17 +2,58 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Admin extends CI_Controller {
+	public function isLoged(){
+		return $this->session->has_userdata('user') && $this->session->user->id != null;
+	}
+	public function checkLoged($redir = "LearningUp/login"){
+		if(!$this->isLoged())
+			redirect($redir);
+		return true;
+	}
 	public function index(){
-		$this->load->view("admin/admin");
+		$this->checkLoged();
+		$data = array('userdata' =>$this->session->user,'option','logs');
+		$this->load->view("admin/admin",$data);
+		
 	}
 	public function formMateria(){
+		$this->checkLoged();
+		$this->load->view("admin/admin",array('userdata'=>$this->session->user));
+		$this->load->view("admin/FormSubject");
 
 	}
 	public function listSubjects($errors = 0){
+		$this->checkLoged();
 		$this->load->view("admin/admin.php");
-		$this->load->view('admin/FormSubject');
+		$this->load->library('pagination');
+		$this->load->model("Subject");
+		$config['base_url'] = site_url().'/Admin/logs';
+		$config['per_page'] = 20;
+
+		$config['full_tag_open'] = '<ul class="pagination">';
+		$config['full_tag_close'] = '</ul>';
+		$config['first_link'] = FALSE;
+		$config['last_link'] = FALSE;
+		$config['next_tag_open'] = '<li class="waves-effect">';
+		$config['next_link'] = '<i class="material-icons">chevron_right</i>';
+		$config['next_tag_close'] = '</li>';
+		$config['prev_tag_open'] = '<li class="waves-effect">';
+		$config['prev_link'] = '<i class="material-icons">chevron_left</i>';
+		$config['prev_tag_close'] = '</li>';
+		$config['cur_tag_open'] = '<li class="active">';
+		$config['cur_tag_close'] = '</li>';
+		$config['num_tag_open'] = '<li class="waves-effect">';
+		$config['num_tag_close'] = '</li>';
+		$config['reuse_query_string'] = TRUE;
+
+		$this->pagination->initialize($config);
+		$this->uri->segment(3);
+		$list = $this->Subject->get();
+		$config['total_rows'] = count($list);
+		$this->load->view("admin/admin", array('option' => 'materias', 'materias' => $list,'userdata'=>$this->session->user));
 	}
 	public function logs(){
+		$this->checkLoged();
 		$this->load->library('pagination');
 		$this->load->model('mylog');
 
@@ -34,9 +75,8 @@ class Admin extends CI_Controller {
 		$config['num_tag_open'] = '<li class="waves-effect">';
 		$config['num_tag_close'] = '</li>';
 		$config['reuse_query_string'] = TRUE;
-
+		
 		$this->pagination->initialize($config);
-
 		if($this->uri->segment(3) == "search"){
 			$page = ($this->uri->segment(4, 0)) ;
 			$logList = $this->mylog->get_filtered_list($config["per_page"], $page, $this->input->get('search_bar'));
@@ -47,7 +87,7 @@ class Admin extends CI_Controller {
 		$config['total_rows'] = count($logList);
 
 		//$logs = $this->log->
-		$this->load->view("admin/admin", array('option' => 'logs', 'logs' => $logList));
+		$this->load->view("admin/admin", array('option' => 'logs', 'logs' => $logList,'userdata'=>$this->session->user));
 	}
 
 	public function apagarLog($id, $base){
@@ -68,12 +108,14 @@ class Admin extends CI_Controller {
 	}
 
 	public function apagarLogs(){
+		$this->checkLoged();
 		$this->load->model('mylog');
 		$this->mylog->deleteAll();
 		redirect('Admin/logs');
 	}
 
 	public function users($type='', $id = null){
+		$this->checkLoged();
 		$this->load->library('pagination');
 		$this->load->model('user');
 
@@ -113,7 +155,7 @@ class Admin extends CI_Controller {
 		}
 		$config['total_rows'] = count ($userList);
 
-		$this->load->view("admin/admin", array('option' => 'users', 'users' => $userList));
+		$this->load->view("admin/admin", array('option' => 'users', 'users' => $userList,'userdata'=>$this->session->user));
 	}
 
 	public function updateUser(){
@@ -159,6 +201,7 @@ class Admin extends CI_Controller {
 		redirect('Admin/users');
 	}
 	public function createSubject(){
+		$this->checkLoged();
 		$this->load->library("form_validation");
 		$this->load->model("Subject");
 		$regras = array(
@@ -181,13 +224,13 @@ class Admin extends CI_Controller {
 
 		);
 		$this->form_validation->set_rules($regras);
-		$config["upload_path"] = "application/uploads/subjects/";
+		$config["upload_path"] = "/home/matheushpdo/public_html/Base-System/learningup/uploads/";
 		$config["allowed_types"] = "png|jpeg|gif";
 		$config["max_size"] = 1000;
 		$config ["max_weigth"] = 1024;
 		$config["max_height"] = 768;
 		$this->load->library('upload',$config);
-		echo getcwd();
+		echo $config['upload_path'];
 		is_dir($config['upload_path']) or die('test');
 		if($this->form_validation->run() == false){
 			$data['error'] = validation_errors();
@@ -202,10 +245,10 @@ class Admin extends CI_Controller {
 			if(! ($this->upload->do_upload('img'))){
 				echo $this->upload->display_errors();
 			}
-			var_dump($this->upload->data());
 			$dados['imagem'] = $this->upload->data()['file_name'];
-			var_dump($this->upload->data());
+			$data = array('option'=>'materias');
 			$this->Subject->create($dados);
+			$this->load->view("admin/admin",array('userdata'=>$this->session->user));
 		}
 	}
 }

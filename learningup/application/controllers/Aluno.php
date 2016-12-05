@@ -2,11 +2,21 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Aluno extends CI_Controller {
+	public function isLoged(){
+		return $this->session->has_userdata('user') && $this->session->user->id != null;
+	}
+	public function checkLoged($redir = "LearningUp/login"){
+		if(!$this->isLoged())
+			redirect($redir);
+		return true;
+	}
 	public function index(){
+		$this->checkLoged();
 		$this->load->view("Aluno/dashboard", array('option' => 'Home', 'userdate' => $this->session->user));
 	}
 
 	public function ChecarResposta(){
+		$this->checkLoged();
 		$resposta = $this->input->post('resposta');
 		$lista = $this->session->lista_exercicio;	
 		$eAtual = $lista['exercicio_atual'];
@@ -35,6 +45,7 @@ class Aluno extends CI_Controller {
 	}
 
 	public function CancelarListaExercicios(){
+		$this->checkLoged();
 		//ToDo: Apagar dados da lista de exercicios da session
 		$this->session->unset_userdata("lista_exercicio");
 		$this->session->unset_userdata("exercicio_dados");
@@ -43,6 +54,7 @@ class Aluno extends CI_Controller {
 	}
 
 	public function RealizarExercicio(){
+		$this->checkLoged();
 		$this->load->model('Exercicio');
 		//ToDo: Mostrar exercicios
 		//Está no formato ID Exercicio/ID Lista << talvez seja interessante remover a lista
@@ -68,6 +80,7 @@ class Aluno extends CI_Controller {
 	}
 
 	public function RealizarListaExercicios(){
+		$this->checkLoged();
 		$this->load->model('ListaExercicio');
 		$this->load->model('Exercicio');
 		
@@ -98,6 +111,7 @@ class Aluno extends CI_Controller {
 	}
 
 	public function Simulados(){
+		$this->checkLoged();
 		$this->load->library('pagination');
 		$this->load->model('ListaExercicio');
 
@@ -129,6 +143,7 @@ class Aluno extends CI_Controller {
 	}
 
 	public function Exercicios(){
+		$this->checkLoged();
 		$this->load->library('pagination');
 		$this->load->model('ListaExercicio');
 
@@ -161,6 +176,7 @@ class Aluno extends CI_Controller {
 
 
 	public function Aulas(){
+		$this->checkLoged();
 		$this->load->library('pagination');
 		$this->load->model('Materia');
 		$config = array();
@@ -194,6 +210,7 @@ class Aluno extends CI_Controller {
 	}
 
 	public function Materia(){
+		$this->checkLoged();
 		$this->load->library('pagination');
 		$this->load->model('Conteudo');
 		$this->load->model('Materia');
@@ -228,6 +245,7 @@ class Aluno extends CI_Controller {
 	}
 
 	public function Conteudo(){
+		$this->checkLoged();
 		$this->load->library('pagination');
 		$this->load->model('Conteudo');
 		$this->load->model('Materia');
@@ -263,26 +281,33 @@ class Aluno extends CI_Controller {
 	}
 
 	public function AssistindoAula(){
+		$this->checkLoged();
 		/*	ToDO */
 	}
 
 	public function Grupos(){
+		$this->checkLoged();
 		$this->load->view("Aluno/dashboard", array('option' => 'Grupos', 'userdate' => $this->session->user));
 	}
 
 	public function Opcoes(){
+		$this->checkLoged();
 		$this->load->view("Aluno/dashboard", array('option' => 'Opcoes', 'userdate' => $this->session->user));
 	}
 
 
 
 	public function startSimulate(){
+		$this->checkLoged();
 		$this->load->view("Simulate/simulateAwser");
 	}
 	public function formQuestion(){
+		$this->checkLoged();
 		$this->load->view("Aluno/FormQuestion");
 	}
 	public function createQuestion(){
+		
+		$this->checkLoged();
 		$this->load->library("form_validation");
 		$this->load->model("Questions");
 		$regras = array(

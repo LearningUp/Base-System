@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <title>Question View</title>
   </head>
-  <body>
+  <body style="margin-left:240px" class="container">
     <?php
-      echo form_open("Aluno/createQuestion");
+      echo form_open("Admin/createQuestion");
     ?>
     <label for="titulo">Titulo</label>
     <input type="text" name="titulo"/><br/>
