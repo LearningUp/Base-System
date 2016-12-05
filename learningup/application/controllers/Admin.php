@@ -230,8 +230,7 @@ class Admin extends CI_Controller {
 		$config ["max_weigth"] = 1024;
 		$config["max_height"] = 768;
 		$this->load->library('upload',$config);
-		echo $config['upload_path'];
-		is_dir($config['upload_path']) or die('test');
+		is_dir($config['upload_path']) or die('diretorio de upload não encontrado');
 		if($this->form_validation->run() == false){
 			$data['error'] = validation_errors();
 			$this->load->view('admin/FormSubject',$data);
