@@ -5,6 +5,7 @@ class Admin extends CI_Controller {
 	public function isLoged(){
 		return $this->session->has_userdata('user') && $this->session->user->id != null;
 	}
+	
 	public function checkLoged($redir = "LearningUp/login"){
 		if(!$this->isLoged())
 			redirect($redir);
